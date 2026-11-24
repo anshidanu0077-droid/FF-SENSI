@@ -1,1 +1,107 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FF-SENSI</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;background:#10111b;color:white;
+font-family:Arial;text-align:center;
+}
+header{padding:25px;background:#191b2b}
+h1{color:#ffb52e;font-size:34px}
+p{color:#bbb}
+.card{
+background:#202236;margin:22px auto;padding:22px;
+border-radius:18px;max-width:440px;width:92%;
+}
+input,select,button{
+width:100%;padding:15px;margin:10px 0;
+border:0;border-radius:10px;font-size:16px;
+}
+button{background:#ffad22;font-weight:bold;color:#171717}
+.result{
+background:#151727;padding:13px;
+margin:10px 0;border-radius:10px;
+}
+.value{color:#ffbd43;font-size:26px;font-weight:bold}
+footer{padding:25px;color:#888}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🔥 FF-SENSI</h1>
+<p>Free Fire Sensitivity Generator</p>
+</header>
+
+<div class="card">
+<h2>Choose Your Device</h2>
+
+<input id="device" placeholder="Enter phone or tablet model">
+
+<select id="type">
+<option value="phone">Android Phone</option>
+<option value="iphone">iPhone</option>
+<option value="tablet">Tablet</option>
+</select>
+
+<select id="style">
+<option value="balanced">Balanced</option>
+<option value="headshot">One Tap Headshot</option>
+<option value="smooth">Smooth Gameplay</option>
+</select>
+
+<button onclick="generate()">GENERATE SENSITIVITY</button>
+</div>
+
+<div class="card" id="results" style="display:none">
+<h2>YOUR SETTINGS</h2>
+<div id="settings"></div>
+<button onclick="copySettings()">COPY SETTINGS</button>
+<p>Suggested settings. Adjust in-game to find what works best.</p>
+</div>
+
+<script>
+function generate(){
+let device=document.getElementById("device").value.trim();
+if(!device){alert("Enter your device model");return;}
+
+let type=document.getElementById("type").value;
+let style=document.getElementById("style").value;
+
+let base=type==="tablet"?145:type==="iphone"?175:185;
+
+if(style==="headshot")base+=8;
+if(style==="smooth")base-=12;
+
+let names=["General","Red Dot","2x Scope","4x Scope","Sniper Scope","Free Look"];
+let values=[base,base-5,base-15,base-25,base-55,base+5];
+
+let html="";
+for(let i=0;i<names.length;i++){
+let value=Math.max(0,Math.min(200,values[i]));
+html+=`<div class="result">${names[i]}
+<div class="value">${value}</div></div>`;
+}
+
+document.getElementById("settings").innerHTML=html;
+document.getElementById("results").style.display="block";
+}
+
+function copySettings(){
+let text=document.getElementById("settings").innerText;
+if(navigator.clipboard){
+navigator.clipboard.writeText(text).then(()=>alert("Copied!"));
+}else{
+alert("Please copy manually.");
+}
+}
+</script>
+
+<footer>FF-SENSI © 2026</footer>
+</body>
+</html>
