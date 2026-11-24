@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Free Fire sensitivity suggestions for phones and tablets.">
+<title>FF-SENSI</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:22px 14px 40px;background:#10111b;color:#fff;font-family:Arial,sans-serif;text-align:center}
+h1{color:#ffb52e;font-size:38px;margin-bottom:8px}p{color:#bbb;line-height:1.5}
+.card{background:#202236;padding:22px;border-radius:18px;margin:20px auto;max-width:460px;width:100%}
+input,select,button{display:block;width:100%;padding:15px;margin:12px 0;border:0;border-radius:10px;font-size:16px}
+input,select{background:white;color:#171717}button{background:#ffad22;color:#171717;font-weight:bold}
+.result{display:flex;justify-content:space-between;padding:13px;margin:9px 0;background:#151727;border-radius:10px;text-align:left}
+.value{color:#ffbd43;font-size:23px;font-weight:bold}.small{font-size:13px}
+</style>
+</head>
+<body>
+<header><h1>🔥 FF-SENSI</h1><p>Free Fire sensitivity suggestions for phones and tablets</p></header>
+<main>
+<section class="card">
+<h2>Choose your device</h2>
+<input id="device" placeholder="Enter phone or tablet model" maxlength="60">
+<select id="type"><option value="phone">Android Phone</option><option value="iphone">iPhone</option><option value="tablet">Tablet</option></select>
+<select id="style"><option value="balanced">Balanced</option><option value="headshot">One Tap / Headshot</option><option value="smooth">Smooth Gameplay</option></select>
+<button id="generate">GENERATE SENSITIVITY</button>
+</section>
+<section class="card" id="results" hidden aria-live="polite">
+<h2>YOUR SETTINGS</h2><p id="deviceLabel"></p><div id="settings"></div>
+<button id="copy">COPY SETTINGS</button>
+<p class="small">These are suggested starting values, not guaranteed perfect settings. Adjust them in-game.</p>
+</section>
+</main>
+<footer class="small">FF-SENSI © 2026 · Fan-made, unofficial tool. Not affiliated with Garena.</footer>
+<script>
+const el=id=>document.getElementById(id);
+el("generate").addEventListener("click",()=>{
+ const device=el("device").value.trim();
+ if(!device){alert("Please enter your device model.");el("device").focus();return;}
+ const type=el("type").value,style=el("style").value;
+ let base=type==="tablet"?145:type==="iphone"?175:185;
+ if(style==="headshot")base+=8;
+ if(style==="smooth")base-=12;
+ const names=["General","Red Dot","2x Scope","4x Scope","Sniper Scope","Free Look"];
+ const offsets=[0,-5,-15,-25,-55,5],box=el("settings");box.replaceChildren();
+ names.forEach((name,i)=>{
+  const row=document.createElement("div");row.className="result";
+  const label=document.createElement("span");label.textContent=name;
+  const value=document.createElement("span");value.className="value";
+  value.textContent=Math.max(0,Math.min(200,base+offsets[i]));
+  row.append(label,value);box.append(row);
+ });
+ el("deviceLabel").textContent="Device: "+device;
+ el("results").hidden=false;
+});
+el("copy").addEventListener("click",async()=>{
+ const text=el("deviceLabel").textContent+"\n"+[...el("settings").children].map(r=>r.children[0].textContent+": "+r.children[1].textContent).join("\n");
+ try{await navigator.clipboard.writeText(text);alert("Settings copied!");}
+ catch{alert("Copy unavailable. Please copy the settings manually.");}
+});
+</script>
+</body>
+</html>
